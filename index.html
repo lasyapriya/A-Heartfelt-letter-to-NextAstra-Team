@@ -7,8 +7,8 @@
     <style>
         :root {
             --pastel-bg: #f3f7fa;
-            --parchment: #f4ebd0; 
-            --ink: #2b261f;       
+            --parchment: #f4ebd0; /* Rich, buttery old parchment brown */
+            --ink: #2b261f;       /* Faded vintage dark brown ink */
             --pastel-purple: #d6c7ff;
             --pastel-cyan: #cde7ff;
             --text-dark: #2d3748;
@@ -214,6 +214,8 @@
             border-bottom: 2px dashed rgba(43, 38, 31, 0.3);
             padding-bottom: 15px;
             min-height: 50px;
+            display: flex;
+            align-items: center;
         }
 
         .vintage-letter h1 {
@@ -222,22 +224,21 @@
             letter-spacing: 2px;
             color: var(--ink);
             display: inline-block;
-            white-space: nowrap;
+            white-space: pre-wrap; /* Allows the typewriter logic to reveal spacing correctly */
             overflow: hidden;
-            border-right: 2px solid transparent; /* Mimics typing cursor placeholder */
-            width: 0; /* Animated via JS typing engine */
+            width: auto; 
         }
 
         /* The floating quill tracking the pen stroke */
         .feather-quill {
             position: absolute;
             font-size: 36px;
-            top: -20px;
+            top: -15px;
             left: 0;
             pointer-events: none;
             display: none;
             transform: rotate(-30deg);
-            transition: left 0.1s linear, top 0.1s linear;
+            transition: left 0.05s linear;
             z-index: 60;
         }
 
@@ -361,7 +362,7 @@
             position: absolute;
             bottom: 90px;
             right: 0;
-            width: 360px;
+            width: 380px;
             background: #fffdf9;
             border: 2px solid var(--text-dark);
             box-shadow: 8px 8px 0px var(--text-dark);
@@ -383,6 +384,8 @@
 
         .bot-panel-body {
             padding: 16px;
+            max-height: 450px;
+            overflow-y: auto;
         }
 
         .bot-response-bubble {
@@ -445,7 +448,7 @@
 
     <div class="vintage-letter" id="targetLetter">
         <div class="heading-container">
-            <h1 id="animatedHeading">A Note to the NextAstra Team</h1>
+            <h1 id="animatedHeading"></h1>
             <div class="feather-quill" id="featherQuill">🪶</div>
         </div>
         
@@ -468,7 +471,7 @@
             <p>Warm regards,<br><strong>Manaswini Sri Lasya Priya</strong></p>
 
             <div class="download-box">
-                <a href="your-resume.pdf" target="_blank" class="download-link">📥 DOWNLOAD RESUME (PDF)</a>
+                <a href="myresume.pdf" target="_blank" class="download-link">📥 DOWNLOAD RESUME (PDF)</a>
             </div>
         </div>
     </div>
@@ -483,13 +486,15 @@
         </div>
 
         <div class="bot-panel" id="assistantPanel">
-            <div class="bot-panel-header">🤖 Manaswini's Assistant</div>
+            <div class="bot-panel-header">🤖 Manaswini's Profile Assistant</div>
             <div class="bot-panel-body">
-                <div class="bot-response-bubble" id="botOutput">Hi! Select a technical node to inspect my core development focus.</div>
+                <div class="bot-response-bubble" id="botOutput">Hi! Pick a burning question below to find out what makes me tick.</div>
                 <div class="bot-questions-list">
-                    <button class="question-btn" onclick="askBotSystem('lens')">Tell me about Food Lens.</button>
-                    <button class="question-btn" onclick="askBotSystem('gate')">How did you secure GATE AIR 993?</button>
-                    <button class="question-btn" onclick="askBotSystem('stress')">What is your approach to breaking AI models?</button>
+                    <button class="question-btn" onclick="askBotSystem('hobbies')">⚽ What are your hobbies?</button>
+                    <button class="question-btn" onclick="askBotSystem('interest')">🚀 Why NextAstra? Why not a boring corporate job?</button>
+                    <button class="question-btn" onclick="askBotSystem('need')">☕ Why do you *need* this job right now?</button>
+                    <button class="question-btn" onclick="askBotSystem('lens')">📸 Tell me about Food Lens.</button>
+                    <button class="question-btn" onclick="askBotSystem('gate')">🧠 How did you get GATE AIR 993?</button>
                 </div>
             </div>
         </div>
@@ -500,10 +505,10 @@
         const bubblePalette = ['#ffccd5', '#bde0fe', '#c8b6ff', '#fde2e4', '#e2ece9'];
         const streamContainer = document.getElementById('bubbleStream');
         
-        for (let i = 0; i < 55; i++) {
+        for (let i = 0; i < 85; i++) {
             let bubbleNode = document.createElement('div');
             bubbleNode.classList.add('bubble');
-            let diameter = Math.random() * 55 + 15;
+            let diameter = Math.random() * 85 + 15;
             bubbleNode.style.width = `${diameter}px`;
             bubbleNode.style.height = `${diameter}px`;
             bubbleNode.style.left = `${Math.random() * 100}vw`;
@@ -531,7 +536,7 @@
             }, 650);
         }
 
-        // --- FEATHER WRITING HEADING LOGIC ---
+        // --- FIXED FEATHER WRITING HEADING LOGIC ---
         function executeFeatherWritingAnimation() {
             const heading = document.getElementById('animatedHeading');
             const quill = document.getElementById('featherQuill');
@@ -540,22 +545,31 @@
             const targetText = "A Note to the NextAstra Team";
             let charIndex = 0;
             
+            heading.innerText = "";
             quill.style.display = 'block';
-            heading.style.width = '0';
 
-            // Calculate width parameters dynamically per step to track pen coordinates
+            // Create a temporary span marker to precisely track typographic pixels on screen
+            const trackerSpan = document.createElement('span');
+            trackerSpan.style.visibility = 'hidden';
+            trackerSpan.style.position = 'absolute';
+            trackerSpan.style.whiteSpace = 'pre';
+            heading.parentNode.appendChild(trackerSpan);
+
             function typeLetterBlock() {
                 if (charIndex <= targetText.length) {
-                    heading.innerText = targetText.substring(0, charIndex);
-                    // Approximate character width tracking rule to slide quill smoothly along x-axis
-                    let currentWidth = heading.scrollWidth;
-                    quill.style.left = `${currentWidth + 10}px`;
+                    const partialText = targetText.substring(0, charIndex);
+                    heading.innerText = partialText;
+                    trackerSpan.innerText = partialText;
+                    
+                    // Track precise bounding rect of typed characters to position quill tip directly over it
+                    let currentPositionX = trackerSpan.offsetWidth;
+                    quill.style.left = `${currentPositionX + 5}px`;
                     
                     charIndex++;
-                    setTimeout(typeLetterBlock, 70); // Natural writing speed pacing
+                    setTimeout(typeLetterBlock, 60); 
                 } else {
-                    // Script complete: Fade quill out smoothly, fade comprehensive context text blocks in
                     quill.style.opacity = '0';
+                    trackerSpan.remove();
                     setTimeout(() => quill.style.display = 'none', 300);
                     bodyContent.classList.add('reveal');
                 }
@@ -563,7 +577,7 @@
             typeLetterBlock();
         }
 
-        // --- ASSISTANT TERMINAL LOGIC ---
+        // --- ASSISTANT FUNNY TERMINAL LOGIC ---
         function toggleAssistantPanel() {
             const displayPanel = document.getElementById('assistantPanel');
             displayPanel.classList.toggle('open');
@@ -574,12 +588,16 @@
             const interfaceSpeech = document.getElementById('botOutput');
             let resolutionResponse = "";
 
-            if (keyToken === 'lens') {
+            if (keyToken === 'hobbies') {
+                resolutionResponse = "When I'm not breaking or optimizing LLM guardrails, I'm usually spending time teaching complex data science theories to students. Oh, I forgot to tell that I sing songs that your ears hurt and obsessively over-prompting generative art models until they produce something legendary.";
+            } else if (keyToken === 'interest') {
+                resolutionResponse = "Because life is too short to work on legacy databases that change colors once every fiscal year. NextAstra is pushing actual AI application layers in production. That's where the chaos, the learning, and the real solutions are built.";
+            } else if (keyToken === 'need') {
+                resolutionResponse = "Honestly? Money for survival, building things for happiness. I’m trying to maintain both.";
+            } else if (keyToken === 'lens') {
                 resolutionResponse = "Food Lens is an image-recognition engine I crafted to scan meals. It translates deep computer vision architecture into immediate everyday utility.";
             } else if (keyToken === 'gate') {
                 resolutionResponse = "Rigorous structural iteration. Earning Rank 993 required systematically tackling high-dimensional math and algorithms until they felt instinctive.";
-            } else if (keyToken === 'stress') {
-                resolutionResponse = "I regularly pressure-test parameters inside modern LLMs (Claude, GPT) using edge-case queries to discover exactly where security guardrails and structural logic break down.";
             }
 
             interfaceSpeech.style.opacity = '0';
@@ -592,8 +610,9 @@
         // --- AUTOMATED REMINDER TEASER NUDGES ---
         const textPrompts = [
             "Explore Manaswini's Bot! 🤖",
-            "Psst... ask me about GATE details! 🤫",
-            "Want to see my tech stack? Click here! ⚡"
+            "Psst... click me to know my hobbies! 🤫",
+            "Want to know why I need this job? Click here! ⚡",
+            "Ask me why I love NextAstra! 🚀"
         ];
         let indexTrack = 0;
         const targetNudge = document.getElementById('nudgeBubble');
