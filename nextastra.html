@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message for NextAstra</title>
+    <style>
+        :root {
+            --pastel-bg: #f3f7fa;
+            --parchment: #f4ebd0; /* Rich, buttery old parchment brown */
+            --ink: #2b261f;       /* Faded vintage dark brown ink */
+            --pastel-purple: #d6c7ff;
+            --pastel-cyan: #cde7ff;
+            --text-dark: #2d3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        body {
+            background-color: var(--pastel-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2500px;
+            position: relative;
+        }
+
+        /* --- IMMERSIVE PASTEL BUBBLE STREAM --- */
+        .bubble-stream {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: floatUp 10s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) translateX(0) scale(0.6); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) translateX(30px) scale(1); opacity: 0; }
+        }
+
+        /* --- BACKGROUND CREDENTIAL MARQUEE --- */
+        .marquee-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
+            display: none;
+            overflow: hidden;
+        }
+
+        .floating-credential {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px dashed var(--pastel-purple);
+            padding: 12px 22px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-dark);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+            white-space: nowrap;
+            animation: leftToRight 28s linear infinite;
+        }
+
+        @keyframes leftToRight {
+            0% { left: -350px; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { left: 100vw; opacity: 0; }
+        }
+
+        .fc1 { top: 12%; animation-duration: 24s; }
+        .fc2 { top: 25%; animation-duration: 30s; animation-delay: 4s; }
+        .fc3 { bottom: 25%; animation-duration: 26s; animation-delay: 2s; }
+        .fc4 { bottom: 12%; animation-duration: 28s; animation-delay: 6s; }
+
+        /* --- MAIN ANIMATION ARENA --- */
+        .scene-stage {
+            position: relative;
+            z-index: 5;
+            width: 90%;
+            max-width: 800px;
+            height: 520px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .aesthetic-envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fff5f6 0%, #ffccd5 50%, #ffa3b1 100%);
+            border: 2px solid #fff;
+            border-radius: 16px;
+            box-shadow: 0 25px 55px rgba(232, 174, 182, 0.35);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: envelopeFloat 4s ease-in-out infinite;
+            transform-style: preserve-3d;
+            transition: opacity 0.6s ease, transform 0.8s ease;
+        }
+
+        @keyframes envelopeFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(0.5deg); }
+        }
+
+        .aesthetic-envelope::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                linear-gradient(32deg, rgba(255, 163, 177, 0.4) 49%, transparent 50%),
+                linear-gradient(-32deg, rgba(255, 163, 177, 0.4) 49%, transparent 50%);
+            border-radius: 16px;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: -2px; left: -2px; width: calc(100% + 4px); height: 0;
+            border-left: 400px solid transparent;
+            border-right: 400px solid transparent;
+            border-top: 260px solid #ffb3c1;
+            transform-origin: top center;
+            z-index: 5;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .center-action-trigger {
+            position: absolute;
+            z-index: 15;
+        }
+
+        .open-btn {
+            background: #fffdf9;
+            border: 3px solid var(--text-dark);
+            color: var(--text-dark);
+            padding: 16px 42px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px var(--text-dark);
+            transition: all 0.2s ease;
+        }
+
+        .open-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--text-dark);
+        }
+
+        /* --- ULTRA-VINTAGE PARCHMENT SHEET WITH CRIPPLED EDGES --- */
+        .vintage-letter {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -30%) scale(0.8);
+            width: 85vw;
+            max-width: 900px;
+            height: 85vh;
+            background-color: var(--parchment);
+            color: var(--ink);
+            padding: 60px 50px;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            overflow-y: auto;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease, visibility 0.6s;
+            
+            /* Crippled, torn paper simulation via CSS clip-path mask */
+            clip-path: polygon(
+                0% 2%, 4% 0%, 9% 3%, 13% 1%, 18% 4%, 24% 1%, 30% 3%, 37% 0%, 43% 3%, 50% 1%, 
+                57% 4%, 64% 1%, 70% 3%, 78% 0%, 85% 3%, 92% 1%, 97% 4%, 100% 2%,
+                99% 12%, 100% 24%, 98% 36%, 100% 48%, 99% 62%, 100% 76%, 98% 88%, 99% 100%,
+                94% 98%, 87% 100%, 80% 97%, 72% 99%, 65% 97%, 58% 100%, 50% 98%, 42% 100%, 
+                35% 97%, 27% 99%, 20% 97%, 13% 100%, 6% 98%, 0% 99%,
+                1% 86%, 0% 72%, 2% 58%, 0% 44%, 1% 30%, 0% 15%
+            );
+            box-shadow: inset 0 0 40px rgba(139, 94, 60, 0.3), 15px 15px 35px rgba(0,0,0,0.15);
+        }
+
+        /* --- THE CINEMATIC ANIMATED HEADING & FEATHER QUILL --- */
+        .heading-container {
+            position: relative;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed rgba(43, 38, 31, 0.3);
+            padding-bottom: 15px;
+            min-height: 50px;
+        }
+
+        .vintage-letter h1 {
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--ink);
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid transparent; /* Mimics typing cursor placeholder */
+            width: 0; /* Animated via JS typing engine */
+        }
+
+        /* The floating quill tracking the pen stroke */
+        .feather-quill {
+            position: absolute;
+            font-size: 36px;
+            top: -20px;
+            left: 0;
+            pointer-events: none;
+            display: none;
+            transform: rotate(-30deg);
+            transition: left 0.1s linear, top 0.1s linear;
+            z-index: 60;
+        }
+
+        /* Hidden text wrapper until pen drawing sequence finishes */
+        .letter-content-body {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .letter-content-body.reveal {
+            opacity: 1;
+        }
+
+        /* --- CHOREOGRAPHY ANIMATION MATRIX STATE TOGGLES --- */
+        .scene-stage.open-sequence .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .scene-stage.disappeared {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .vintage-letter.center-reveal {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .vintage-letter p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .vintage-letter ul {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+
+        .vintage-letter li {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        /* --- RESUME VINTAGE DOWNLOAD --- */
+        .download-box {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed var(--ink);
+            text-align: center;
+        }
+
+        .download-link {
+            display: inline-block;
+            background: var(--ink);
+            color: var(--parchment);
+            padding: 16px 36px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 4px 4px 0px var(--pastel-purple);
+            transition: all 0.2s;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px var(--pastel-purple);
+        }
+
+        /* --- ASSISTANT MINI-BOT SYSTEM --- */
+        .bot-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .bot-nudge-bubble {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--text-dark);
+            padding: 12px 18px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            box-shadow: 4px 4px 0px var(--pastel-purple);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bot-nudge-bubble.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bot-circle {
+            width: 65px;
+            height: 65px;
+            background: var(--pastel-purple);
+            border: 2px solid var(--text-dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--text-dark);
+            transition: transform 0.2s;
+        }
+
+        .bot-circle:hover {
+            transform: scale(1.05);
+        }
+
+        .bot-panel {
+            position: absolute;
+            bottom: 90px;
+            right: 0;
+            width: 360px;
+            background: #fffdf9;
+            border: 2px solid var(--text-dark);
+            box-shadow: 8px 8px 0px var(--text-dark);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .bot-panel.open {
+            display: flex;
+        }
+
+        .bot-panel-header {
+            background: var(--pastel-cyan);
+            padding: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--text-dark);
+        }
+
+        .bot-panel-body {
+            padding: 16px;
+        }
+
+        .bot-response-bubble {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .bot-questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .question-btn {
+            background: white;
+            border: 2px solid var(--text-dark);
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .question-btn:hover {
+            background: var(--pastel-cyan);
+        }
+
+        @media (max-width: 768px) {
+            .vintage-letter { width: 94vw; height: 90vh; padding: 40px 20px; }
+            .envelope-flap { border-left-width: 200px; border-right-width: 200px; border-top-width: 150px; }
+            .bot-panel { width: calc(100vw - 60px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bubble-stream" id="bubbleStream"></div>
+
+    <div class="marquee-container" id="marqueeContext">
+        <div class="floating-credential fc1">🎓 CSE Student — 9.2 CGPA</div>
+        <div class="floating-credential fc2">🏅 Honors in Data Science & AI</div>
+        <div class="floating-credential fc3">📜 NPTEL Certified Specialist</div>
+        <div class="floating-credential fc4">⚡ GATE AIR 993 (DS & AI)</div>
+    </div>
+
+    <div class="scene-stage" id="sceneStage">
+        <div class="aesthetic-envelope" id="envelopeWrapper">
+            <div class="envelope-flap"></div>
+            
+            <div class="center-action-trigger" id="actionBox">
+                <button class="open-btn" onclick="triggerLetterRevealSequence()">OPEN LETTER</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="vintage-letter" id="targetLetter">
+        <div class="heading-container">
+            <h1 id="animatedHeading">A Note to the NextAstra Team</h1>
+            <div class="feather-quill" id="featherQuill">🪶</div>
+        </div>
+        
+        <div class="letter-content-body" id="letterBodyContent">
+            <p>During my college years, I spent a lot of time living and breathing AI. That meant plenty of late nights and bright screens, but it also gave me a genuine understanding of how these systems behave outside of a textbook.</p>
+            
+            <p>When I came across NextAstra, your focus on building real-world solutions really stood out to me. I want to build things that actually solve problems, not just create models for the sake of it.</p>
+            
+            <p>I have completed two internships in AI and machine learning, and built projects like a medical chatbot, a marketing campaign predictor, and an image tool called Food Lens. Beyond building, I have also spent the last three years deeply interacting with tools like ChatGPT, Claude, and Grok—not just as a user, but testing their limits and figuring out how to get the best responses out of them.</p>
+            
+            <p>A few quick things about my background:</p>
+            <ul>
+                <li>I secured an All India Rank of 993 in the GATE Data Science and AI exam.</li>
+                <li>I currently mentor data science students, which has taught me how to explain complex technical ideas simply.</li>
+                <li>If you give me a difficult problem, I will stay with it until I truly understand why it works or why it broke.</li>
+            </ul>
+            
+            <p>I would love the opportunity to contribute and grow with your team.</p>
+            
+            <p>Warm regards,<br><strong>Manaswini Sri Lasya Priya</strong></p>
+
+            <div class="download-box">
+                <a href="your-resume.pdf" target="_blank" class="download-link">📥 DOWNLOAD RESUME (PDF)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bot-wrapper">
+        <div class="bot-nudge-bubble" id="nudgeBubble">Explore Manaswini's Bot! 🤖</div>
+        
+        <div class="bot-circle" onclick="toggleAssistantPanel()">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+
+        <div class="bot-panel" id="assistantPanel">
+            <div class="bot-panel-header">🤖 Manaswini's Assistant</div>
+            <div class="bot-panel-body">
+                <div class="bot-response-bubble" id="botOutput">Hi! Select a technical node to inspect my core development focus.</div>
+                <div class="bot-questions-list">
+                    <button class="question-btn" onclick="askBotSystem('lens')">Tell me about Food Lens.</button>
+                    <button class="question-btn" onclick="askBotSystem('gate')">How did you secure GATE AIR 993?</button>
+                    <button class="question-btn" onclick="askBotSystem('stress')">What is your approach to breaking AI models?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- HIGH LEVEL PASTEL BUBBLE ENGINE ---
+        const bubblePalette = ['#ffccd5', '#bde0fe', '#c8b6ff', '#fde2e4', '#e2ece9'];
+        const streamContainer = document.getElementById('bubbleStream');
+        
+        for (let i = 0; i < 55; i++) {
+            let bubbleNode = document.createElement('div');
+            bubbleNode.classList.add('bubble');
+            let diameter = Math.random() * 55 + 15;
+            bubbleNode.style.width = `${diameter}px`;
+            bubbleNode.style.height = `${diameter}px`;
+            bubbleNode.style.left = `${Math.random() * 100}vw`;
+            bubbleNode.style.background = bubblePalette[Math.floor(Math.random() * bubblePalette.length)];
+            bubbleNode.style.animationDelay = `${Math.random() * 10}s`;
+            bubbleNode.style.animationDuration = `${Math.random() * 5 + 7}s`;
+            streamContainer.appendChild(bubbleNode);
+        }
+
+        // --- ENVELOPE OPEN & CENTERING SEQUENCING ---
+        function triggerLetterRevealSequence() {
+            const stage = document.getElementById('sceneStage');
+            const letter = document.getElementById('targetLetter');
+            const marquee = document.getElementById('marqueeContext');
+
+            stage.classList.add('open-sequence');
+
+            setTimeout(() => {
+                stage.classList.add('disappeared');
+                letter.classList.add('center-reveal');
+                marquee.style.display = 'block'; 
+                
+                // Fire feather writing animation precisely as letter frames completely center
+                setTimeout(executeFeatherWritingAnimation, 600);
+            }, 650);
+        }
+
+        // --- FEATHER WRITING HEADING LOGIC ---
+        function executeFeatherWritingAnimation() {
+            const heading = document.getElementById('animatedHeading');
+            const quill = document.getElementById('featherQuill');
+            const bodyContent = document.getElementById('letterBodyContent');
+            
+            const targetText = "A Note to the NextAstra Team";
+            let charIndex = 0;
+            
+            quill.style.display = 'block';
+            heading.style.width = '0';
+
+            // Calculate width parameters dynamically per step to track pen coordinates
+            function typeLetterBlock() {
+                if (charIndex <= targetText.length) {
+                    heading.innerText = targetText.substring(0, charIndex);
+                    // Approximate character width tracking rule to slide quill smoothly along x-axis
+                    let currentWidth = heading.scrollWidth;
+                    quill.style.left = `${currentWidth + 10}px`;
+                    
+                    charIndex++;
+                    setTimeout(typeLetterBlock, 70); // Natural writing speed pacing
+                } else {
+                    // Script complete: Fade quill out smoothly, fade comprehensive context text blocks in
+                    quill.style.opacity = '0';
+                    setTimeout(() => quill.style.display = 'none', 300);
+                    bodyContent.classList.add('reveal');
+                }
+            }
+            typeLetterBlock();
+        }
+
+        // --- ASSISTANT TERMINAL LOGIC ---
+        function toggleAssistantPanel() {
+            const displayPanel = document.getElementById('assistantPanel');
+            displayPanel.classList.toggle('open');
+            document.getElementById('nudgeBubble').classList.remove('active');
+        }
+
+        function askBotSystem(keyToken) {
+            const interfaceSpeech = document.getElementById('botOutput');
+            let resolutionResponse = "";
+
+            if (keyToken === 'lens') {
+                resolutionResponse = "Food Lens is an image-recognition engine I crafted to scan meals. It translates deep computer vision architecture into immediate everyday utility.";
+            } else if (keyToken === 'gate') {
+                resolutionResponse = "Rigorous structural iteration. Earning Rank 993 required systematically tackling high-dimensional math and algorithms until they felt instinctive.";
+            } else if (keyToken === 'stress') {
+                resolutionResponse = "I regularly pressure-test parameters inside modern LLMs (Claude, GPT) using edge-case queries to discover exactly where security guardrails and structural logic break down.";
+            }
+
+            interfaceSpeech.style.opacity = '0';
+            setTimeout(() => {
+                interfaceSpeech.innerText = resolutionResponse;
+                interfaceSpeech.style.opacity = '1';
+            }, 150);
+        }
+
+        // --- AUTOMATED REMINDER TEASER NUDGES ---
+        const textPrompts = [
+            "Explore Manaswini's Bot! 🤖",
+            "Psst... ask me about GATE details! 🤫",
+            "Want to see my tech stack? Click here! ⚡"
+        ];
+        let indexTrack = 0;
+        const targetNudge = document.getElementById('nudgeBubble');
+
+        function routeTeasers() {
+            const displayPanel = document.getElementById('assistantPanel');
+            if (!displayPanel.classList.contains('open')) {
+                targetNudge.classList.remove('active');
+                setTimeout(() => {
+                    targetNudge.innerText = textPrompts[indexTrack];
+                    targetNudge.classList.add('active');
+                    indexTrack = (indexTrack + 1) % textPrompts.length;
+                }, 400);
+            }
+        }
+        setInterval(routeTeasers, 6000);
+        setTimeout(routeTeasers, 2500);
+    </script>
+</body>
+</html>
